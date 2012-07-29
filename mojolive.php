@@ -78,7 +78,7 @@ class Mojolive_Widget extends WP_Widget {
     
     echo $before_widget;
 
-    echo "FOOOOO";
+    $this->_displayProfile();
     
       // TODO: This is where you retrieve the widget values
     
@@ -88,6 +88,25 @@ class Mojolive_Widget extends WP_Widget {
     echo $after_widget;
     
   } // end widget
+
+  protected function _displayProfile() {
+    $uri = 'http://mojolive.com/api/v1/user?username=jblotus&appname=jblotus-mojolive-wordpress-plugin';
+    $response = wp_remote_get( $uri );
+
+    if( is_wp_error( $response ) ) {
+       echo 'Something went wrong!';
+    } else {
+       $body = wp_remote_retrieve_body( $response );
+       $user = (array) json_decode($body);
+       $score = !empty($user['score']) ? $user['score'] : null;
+       $output = '';
+       $output .= '<strong>My MojoScore:</strong>' . esc_html($score);
+       $output .= "\n";
+       $image_url = !empty($user['image']) ? $user['image'] : null;
+       $output .= "<img src=". esc_html($image_url) . " />";
+       echo $output;
+    }
+  }
   
   /**
    * Processes the widget's options to be saved.
