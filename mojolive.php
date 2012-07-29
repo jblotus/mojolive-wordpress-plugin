@@ -25,7 +25,7 @@ License:
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-class MojoLiveWidget extends WP_Widget {
+class Mojolive_Widget extends WP_Widget {
 
   /*--------------------------------------------------*/
   /* Constructor
@@ -38,20 +38,17 @@ class MojoLiveWidget extends WP_Widget {
    */
   public function __construct() {
   
-    // TODO be sure to change 'widget-name' to the name of *your* plugin
-    load_plugin_textdomain( 'widget-name-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
+    load_plugin_textdomain( 'mojolive-widget-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
     
     register_activation_hook( __FILE__, array( &$this, 'activate' ) );
     register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) );
     
-    // TODO: update classname and description
-      // TODO: replace 'widget-name-locale' to be named more plugin specific. other instances exist throughout the code, too.
     parent::__construct(
-      'widget-name-id',
-      'Widget_Name',
+      'mojolive-widget-id',
+      'Mojolive_Widget',
       array(
-        'classname'   =>  'widget-name-class',
-        'description' =>  __( 'Short description of the widget goes here.', 'widget-name-locale' )
+        'classname'   =>  'mojolive-widget-class',
+        'description' =>  __( 'Mojolive description', 'mojolive-widget-locale' )
       )
     );
     
@@ -80,6 +77,8 @@ class MojoLiveWidget extends WP_Widget {
     extract( $args, EXTR_SKIP );
     
     echo $before_widget;
+
+    echo "FOOOOO";
     
       // TODO: This is where you retrieve the widget values
     
@@ -155,8 +154,8 @@ class MojoLiveWidget extends WP_Widget {
    */
   public function register_admin_styles() {
   
-    // TODO change 'widget-name' to the name of your plugin
-    wp_enqueue_style( 'widget-name-admin-styles', plugins_url( 'widget-name/css/admin.css' ) );
+    // TODO change 'mojolive-widget' to the name of your plugin
+    wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
   
   } // end register_admin_styles
 
@@ -165,9 +164,9 @@ class MojoLiveWidget extends WP_Widget {
    */ 
   public function register_admin_scripts() {
   
-    // TODO change 'widget-name' to the name of your plugin
-    wp_register_script( 'widget-name-admin-script', plugins_url( 'widget-name/js/admin.js' ) );
-    wp_enqueue_script( 'widget-name-admin-script' );
+    // TODO change 'mojolive-widget' to the name of your plugin
+    wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
+    wp_enqueue_script( 'mojolive-widget-admin-script' );
   
   } // end register_admin_scripts
   
@@ -176,9 +175,9 @@ class MojoLiveWidget extends WP_Widget {
    */
   public function register_widget_styles() {
   
-    // TODO change 'widget-name' to the name of your plugin
-    wp_register_style( 'widget-name-widget-styles', plugins_url( 'widget-name/css/admin.css' ) );
-    wp_enqueue_style( 'widget-name-widget-styles' );
+    // TODO change 'mojolive-widget' to the name of your plugin
+    wp_register_style( 'mojolive-widget-widget-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
+    wp_enqueue_style( 'mojolive-widget-widget-styles' );
   
   } // end register_widget_styles
   
@@ -187,13 +186,13 @@ class MojoLiveWidget extends WP_Widget {
    */
   public function register_widget_scripts() {
   
-    // TODO change 'widget-name' to the name of your plugin
-    wp_register_script( 'widget-name-admin-script', plugins_url( 'widget-name/js/admin.js' ) );
-    wp_enqueue_script( 'widget-name-widget-script' );
+    // TODO change 'mojolive-widget' to the name of your plugin
+    wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
+    wp_enqueue_script( 'mojolive-widget-widget-script' );
   
   } // end register_widget_scripts
   
 } // end class
-// TODO remember to change 'Widget_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Name");' ) ); 
+// TODO remember to change 'Mojolive_Widget' to match the class name definition
+add_action( 'widgets_init', create_function( '', 'register_widget("Mojolive_Widget");' ) ); 
 ?>
