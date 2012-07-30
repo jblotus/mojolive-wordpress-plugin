@@ -78,7 +78,19 @@ class Mojolive_Widget extends WP_Widget {
     
     echo $before_widget;
 
-    $this->_displayProfile();
+    $username = !empty($instance['username']) ? $instance['username'] : null;
+
+    $uri = 'http://mojolive.com/api/v1/user?username=' . $username . '&appname=jblotus-mojolive-wordpress-plugin';
+    $response = wp_remote_get( $uri );
+
+    if( is_wp_error( $response ) ) {
+       echo 'Something went wrong!';
+    } else {
+
+      $body = wp_remote_retrieve_body( $response );
+      $user = (array) json_decode($body);
+      echo $this->_getProfile($user);     
+    }
     
       // TODO: This is where you retrieve the widget values
     
@@ -89,23 +101,14 @@ class Mojolive_Widget extends WP_Widget {
     
   } // end widget
 
-  protected function _displayProfile() {
-    $uri = 'http://mojolive.com/api/v1/user?username=jblotus&appname=jblotus-mojolive-wordpress-plugin';
-    $response = wp_remote_get( $uri );
-
-    if( is_wp_error( $response ) ) {
-       echo 'Something went wrong!';
-    } else {
-       $body = wp_remote_retrieve_body( $response );
-       $user = (array) json_decode($body);
-       $score = !empty($user['score']) ? $user['score'] : null;
-       $output = '';
-       $output .= '<strong>My MojoScore:</strong>' . esc_html($score);
-       $output .= "\n";
-       $image_url = !empty($user['image']) ? $user['image'] : null;
-       $output .= "<img src=". esc_html($image_url) . " />";
-       echo $output;
-    }
+  protected function _getProfile($user = array()) {
+    $score = !empty($user['score']) ? $user['score'] : null;
+    $output = '';
+    $output .= '<strong>My MojoScore:</strong>' . esc_html($score);
+    $output .= "\n";
+    $image_url = !empty($user['image']) ? $user['image'] : null;
+    $output .= "<img src=". esc_html($image_url) . " />";
+    return $output;
   }
   
   /**
@@ -117,9 +120,7 @@ class Mojolive_Widget extends WP_Widget {
   public function update( $new_instance, $old_instance ) {
     
     $instance = $old_instance;
-    
-      // TODO Update the widget with the new values
-    
+    $instance['username'] = strip_tags(stripslashes($new_instance['username'])); 
     return $instance;
     
   } // end widget
@@ -130,19 +131,16 @@ class Mojolive_Widget extends WP_Widget {
    * @instance  The array of keys and values for the widget.
    */
   public function form( $instance ) {
-  
-      // TODO define default values for your variables
+
     $instance = wp_parse_args(
       (array) $instance,
       array(
-        ''  =>  ''
+        'username'  =>  ''
       )
     );
-  
-      // TODO store the values of widget in a variable
-    
+
     // Display the admin form
-      include( plugin_dir_path(__FILE__) . '/views/admin.php' );
+    include( plugin_dir_path(__FILE__) . '/views/admin.php' );
     
   } // end form
 
