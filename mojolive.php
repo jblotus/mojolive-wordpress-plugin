@@ -12,7 +12,7 @@ License:
   Copyright 2012 James Fuller (jblotus@gmail.com)
 
   This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License, version 2, as 
+  it under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
 
   This program is distributed in the hope that it will be useful,
@@ -30,19 +30,21 @@ class Mojolive_Widget extends WP_Widget {
   /*--------------------------------------------------*/
   /* Constructor
   /*--------------------------------------------------*/
-  
+  public $CACHE_TTL = 1200;
+  public $CACHE_KEY_PREFIX = 'mojolive-widget-profile-user-';
+
   /**
    * The widget constructor. Specifies the classname and description, instantiates
    * the widget, loads localization files, and includes necessary scripts and
    * styles.
    */
   public function __construct() {
-  
+
     load_plugin_textdomain( 'mojolive-widget-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
-    
+
     register_activation_hook( __FILE__, array( &$this, 'activate' ) );
     register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) );
-    
+
     parent::__construct(
       'mojolive-widget-id',
       'Mojolive_Widget',
@@ -51,21 +53,21 @@ class Mojolive_Widget extends WP_Widget {
         'description' =>  __( 'Mojolive description', 'mojolive-widget-locale' )
       )
     );
-    
+
     // Register admin styles and scripts
     add_action( 'admin_print_styles', array( &$this, 'register_admin_styles' ) );
     add_action( 'admin_enqueue_scripts', array( &$this, 'register_admin_scripts' ) );
-  
+
     // Register site styles and scripts
     add_action( 'wp_enqueue_scripts', array( &$this, 'register_widget_styles' ) );
     add_action( 'wp_enqueue_scripts', array( &$this, 'register_widget_scripts' ) );
-    
+
   } // end constructor
 
   /*--------------------------------------------------*/
   /* Widget API Functions
   /*--------------------------------------------------*/
-  
+
   /**
    * Outputs the content of the widget.
    *
@@ -73,44 +75,48 @@ class Mojolive_Widget extends WP_Widget {
    * @instance    The current instance of the widget
    */
   public function widget( $args, $instance ) {
-  
+
     extract( $args, EXTR_SKIP );
-    
+
     echo $before_widget;
 
-    $username = !empty($instance['username']) ? $instance['username'] : null;
+    $username  = !empty($instance['username']) ? $instance['username'] : null;
+    $cache_key = $this->CACHE_KEY_PREFIX . $username;
+    $cache_ttl = !empty($instance['cache_ttl']) ? $instance['cache_ttl'] : $this->CACHE_TTL;
 
-    $uri = 'http://mojolive.com/api/v1/user?username=' . $username . '&appname=jblotus-mojolive-wordpress-plugin';
-    $response = wp_remote_get( $uri );
-
-    if( is_wp_error( $response ) ) {
-       echo 'Something went wrong!';
-    } else {
-
-      $body = wp_remote_retrieve_body( $response );
-      $user = (array) json_decode($body);
-      echo $this->_getProfile($user);     
+    // Try to get profile json from cache
+    if ( false === ( $user = get_transient( $cache_key ) ) ) {
+      $user = $this->load_user($username);
+      set_transient( $cache_key, $user, 1 );
     }
-    
-      // TODO: This is where you retrieve the widget values
-    
+
+    $score       = !empty($user['score']) ? $user['score'] : null;
+    $image_url   = !empty($user['image']) ? $user['image'] : null;
+    $profile_url = !empty($user['profile']) ? $user['profile'] : null;
+    //the following vars are not yet being used
+    //$full_name   = !empty($user['full_name']) ? $user['full_name'] : null;
+    //$geography   = !empty($user['geography']) ? $user['geography'] : null;
+    //$tagline     = !empty($user['tagline']) ? $user['tagline'] : null;
     // Display the widget
     include( plugin_dir_path(__FILE__) . '/views/widget.php' );
-    
+
     echo $after_widget;
-    
+  }
+
+  public function load_user($username)
+  {
+    $uri = 'http://mojolive.com/api/v1/user?username=' . $username . '&appname=jblotus-mojolive-wordpress-plugin';
+    $response = wp_remote_get($uri);
+
+    if (is_wp_error($response)) {
+      echo 'Something went wrong!';
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    $user = (array)json_decode($body);
+    return $user;
   } // end widget
 
-  protected function _getProfile($user = array()) {
-    $score = !empty($user['score']) ? $user['score'] : null;
-    $output = '';
-    $output .= '<strong>My MojoScore:</strong>' . esc_html($score);
-    $output .= "\n";
-    $image_url = !empty($user['image']) ? $user['image'] : null;
-    $output .= "<img src=". esc_html($image_url) . " />";
-    return $output;
-  }
-  
   /**
    * Processes the widget's options to be saved.
    *
@@ -118,13 +124,17 @@ class Mojolive_Widget extends WP_Widget {
    * @old_instance  The new instance of values to be generated via the update.
    */
   public function update( $new_instance, $old_instance ) {
-    
+
     $instance = $old_instance;
-    $instance['username'] = strip_tags(stripslashes($new_instance['username'])); 
+    $instance['username']  = strip_tags(stripslashes($new_instance['username']));
+    $instance['cache_ttl'] = !empty($new_instance['cache_ttl']) ? (integer) $new_instance['cache_ttl'] : $this->CACHE_TTL;
+
+    //since we are saving this would be a good time to clear the cache
+    delete_transient($this->CACHE_KEY_PREFIX . $new_instance['username']);
     return $instance;
-    
+
   } // end widget
-  
+
   /**
    * Generates the administration form for the widget.
    *
@@ -141,75 +151,75 @@ class Mojolive_Widget extends WP_Widget {
 
     // Display the admin form
     include( plugin_dir_path(__FILE__) . '/views/admin.php' );
-    
+
   } // end form
 
   /*--------------------------------------------------*/
   /* Public Functions
   /*--------------------------------------------------*/
-  
+
   /**
    * Fired when the plugin is activated.
    *
-   * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog 
+   * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
    */
   public function activate( $network_wide ) {
     // TODO define activation functionality here
   } // end activate
-  
+
   /**
    * Fired when the plugin is deactivated.
    *
-   * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog 
+   * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
    */
   public function deactivate( $network_wide ) {
-    // TODO define deactivation functionality here    
+    // TODO define deactivation functionality here
   } // end deactivate
-  
+
   /**
    * Registers and enqueues admin-specific styles.
    */
   public function register_admin_styles() {
-  
+
     // TODO change 'mojolive-widget' to the name of your plugin
     wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
-  
+
   } // end register_admin_styles
 
   /**
    * Registers and enqueues admin-specific JavaScript.
-   */ 
+   */
   public function register_admin_scripts() {
-  
+
     // TODO change 'mojolive-widget' to the name of your plugin
     wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
     wp_enqueue_script( 'mojolive-widget-admin-script' );
-  
+
   } // end register_admin_scripts
-  
+
   /**
    * Registers and enqueues widget-specific styles.
    */
   public function register_widget_styles() {
-  
+
     // TODO change 'mojolive-widget' to the name of your plugin
     wp_register_style( 'mojolive-widget-widget-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
     wp_enqueue_style( 'mojolive-widget-widget-styles' );
-  
+
   } // end register_widget_styles
-  
+
   /**
    * Registers and enqueues widget-specific scripts.
    */
   public function register_widget_scripts() {
-  
+
     // TODO change 'mojolive-widget' to the name of your plugin
     wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
     wp_enqueue_script( 'mojolive-widget-widget-script' );
-  
+
   } // end register_widget_scripts
-  
+
 } // end class
 // TODO remember to change 'Mojolive_Widget' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Mojolive_Widget");' ) ); 
+add_action( 'widgets_init', create_function( '', 'register_widget("Mojolive_Widget");' ) );
 ?>
