@@ -32,6 +32,7 @@ class Mojolive_Widget extends WP_Widget {
   /*--------------------------------------------------*/
   public $CACHE_TTL = 1200;
   public $CACHE_KEY_PREFIX = 'mojolive-widget-profile-user-';
+  const MOJOLIVE_WIDGET_PLUGIN_DIR = 'mojolive-widget';
 
   /**
    * The widget constructor. Specifies the classname and description, instantiates
@@ -89,6 +90,8 @@ class Mojolive_Widget extends WP_Widget {
       $user = $this->load_user($username);
       set_transient( $cache_key, $user, 1 );
     }
+
+    $plugin_dir  = self::MOJOLIVE_WIDGET_PLUGIN_DIR;
 
     $score       = !empty($user['score']) ? $user['score'] : null;
     $image_url   = !empty($user['image']) ? $user['image'] : null;
@@ -181,8 +184,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_admin_styles() {
 
-    // TODO change 'mojolive-widget' to the name of your plugin
-    wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
+    wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/css/admin.css' ) );
 
   } // end register_admin_styles
 
@@ -191,8 +193,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_admin_scripts() {
 
-    // TODO change 'mojolive-widget' to the name of your plugin
-    wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
+    wp_register_script( 'mojolive-widget-admin-script', plugins_url(self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/js/admin.js' ) );
     wp_enqueue_script( 'mojolive-widget-admin-script' );
 
   } // end register_admin_scripts
@@ -202,9 +203,8 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_widget_styles() {
 
-    // TODO change 'mojolive-widget' to the name of your plugin
-    wp_register_style( 'mojolive-widget-widget-styles', plugins_url( 'mojolive-widget/css/admin.css' ) );
-    wp_enqueue_style( 'mojolive-widget-widget-styles' );
+    wp_register_style( 'mojolive-widget-styles', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/css/widget.css' ) );
+    wp_enqueue_style( 'mojolive-widget-styles' );
 
   } // end register_widget_styles
 
@@ -213,13 +213,10 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_widget_scripts() {
 
-    // TODO change 'mojolive-widget' to the name of your plugin
-    wp_register_script( 'mojolive-widget-admin-script', plugins_url( 'mojolive-widget/js/admin.js' ) );
-    wp_enqueue_script( 'mojolive-widget-widget-script' );
+    wp_register_script( 'mojolive-widget-script', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/' . 'js/admin.js' ) );
+    wp_enqueue_script( 'mojolive-widget-script' );
 
   } // end register_widget_scripts
 
 } // end class
-// TODO remember to change 'Mojolive_Widget' to match the class name definition
 add_action( 'widgets_init', create_function( '', 'register_widget("Mojolive_Widget");' ) );
-?>

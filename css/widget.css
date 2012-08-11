@@ -1,1 +1,46 @@
-/* This stylesheet is used to style the public view of the widget. */
+.mojolive-widget {
+  width: 160px;
+  text-align: center;
+}
+
+.mojolive-widget-badge {
+  background: #ffffff url("../img/mojo.asterisk.50x50.png") no-repeat 10px 10px;
+  text-align: right;
+  position: relative;
+  border: 3px solid #009347;
+  box-shadow: #999;
+  box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+  height: 200px;
+  width: 170px;
+  border-radius: 12px;
+}
+
+.mojolive-widget-badge img {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+}
+
+.mojolive-widget-badge img.mojolive-widget-logo {
+  width: 155px;
+  top: auto;
+  right: 5px;
+  bottom: 0;
+  left: auto;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.mojolive-widget-badge p {
+  position: absolute;
+  color: #009347;
+  font-family: "Gibson SemiBold","Arial Bold";
+  bottom: 30px;
+  right: 5px;
+  font-size: 84px !important;
+  line-height: 1em !important;
+  margin: 0 !important;
+}
