@@ -8,10 +8,6 @@
   text-align: right;
   position: relative;
   border: 3px solid #009347;
-  box-shadow: #999;
-  box-shadow: 0 10px 10px rgba(0,0,0,0.2);
-  -moz-box-shadow: 0 10px 10px rgba(0,0,0,0.2);
-  -webkit-box-shadow: 0 10px 10px rgba(0,0,0,0.2);
   height: 200px;
   width: 170px;
   border-radius: 12px;
