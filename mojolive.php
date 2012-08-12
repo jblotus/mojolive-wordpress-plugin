@@ -27,17 +27,21 @@ License:
 
 class Mojolive_Widget extends WP_Widget {
 
-  /*--------------------------------------------------*/
-  /* Constructor
-  /*--------------------------------------------------*/
+  /**
+   * The default amount of time (seconds) that profile data should be cached
+   * @var int
+   */
   public $CACHE_TTL = 1200;
+  /**
+   * The cache ley prefix for the mojolive api profile data
+   * @var string
+   */
   public $CACHE_KEY_PREFIX = 'mojolive-widget-profile-user-';
-  const MOJOLIVE_WIDGET_PLUGIN_DIR = 'mojolive-widget';
 
   /**
    * The widget constructor. Specifies the classname and description, instantiates
    * the widget, loads localization files, and includes necessary scripts and
-   * styles.
+   * styles.`
    */
   public function __construct() {
 
@@ -90,8 +94,6 @@ class Mojolive_Widget extends WP_Widget {
       $user = $this->load_user($username);
       set_transient( $cache_key, $user, 1 );
     }
-
-    $plugin_dir  = self::MOJOLIVE_WIDGET_PLUGIN_DIR;
 
     $score       = !empty($user['score']) ? $user['score'] : null;
     $image_url   = !empty($user['image']) ? $user['image'] : null;
@@ -184,7 +186,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_admin_styles() {
 
-    wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/css/admin.css' ) );
+    wp_enqueue_style( 'mojolive-widget-admin-styles', plugins_url( '/css/admin.css', __FILE__ ) );
 
   } // end register_admin_styles
 
@@ -193,7 +195,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_admin_scripts() {
 
-    wp_register_script( 'mojolive-widget-admin-script', plugins_url(self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/js/admin.js' ) );
+    wp_register_script( 'mojolive-widget-admin-script', plugins_url( '/js/admin.js', __FILE__ ) );
     wp_enqueue_script( 'mojolive-widget-admin-script' );
 
   } // end register_admin_scripts
@@ -203,7 +205,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_widget_styles() {
 
-    wp_register_style( 'mojolive-widget-styles', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/css/widget.css' ) );
+    wp_register_style( 'mojolive-widget-styles', plugins_url( 'css/widget.css', __FILE__ ) );
     wp_enqueue_style( 'mojolive-widget-styles' );
 
   } // end register_widget_styles
@@ -213,7 +215,7 @@ class Mojolive_Widget extends WP_Widget {
    */
   public function register_widget_scripts() {
 
-    wp_register_script( 'mojolive-widget-script', plugins_url( self::MOJOLIVE_WIDGET_PLUGIN_DIR . '/' . 'js/admin.js' ) );
+    wp_register_script( 'mojolive-widget-script', plugins_url( 'js/admin.js', __FILE__ ) );
     wp_enqueue_script( 'mojolive-widget-script' );
 
   } // end register_widget_scripts
