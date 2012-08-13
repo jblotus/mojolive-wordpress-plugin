@@ -169,7 +169,6 @@ class Mojolive_Widget extends WP_Widget {
    * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
    */
   public function activate( $network_wide ) {
-    // TODO define activation functionality here
   } // end activate
 
   /**
@@ -178,7 +177,6 @@ class Mojolive_Widget extends WP_Widget {
    * @params  $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
    */
   public function deactivate( $network_wide ) {
-    // TODO define deactivation functionality here
   } // end deactivate
 
   /**
