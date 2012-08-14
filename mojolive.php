@@ -38,6 +38,8 @@ class Mojolive_Widget extends WP_Widget {
    */
   public $CACHE_KEY_PREFIX = 'mojolive-widget-profile-user-';
 
+  public $WIDGET_DESCRIPTION = 'Displays your mojoLive score on your sidebar';
+
   /**
    * The widget constructor. Specifies the classname and description, instantiates
    * the widget, loads localization files, and includes necessary scripts and
@@ -51,11 +53,11 @@ class Mojolive_Widget extends WP_Widget {
     register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) );
 
     parent::__construct(
-      'mojolive-widget-id',
-      'Mojolive_Widget',
+      'mojolive-widget',
+      'mojolive Profile Widget',
       array(
         'classname'   =>  'mojolive-widget-class',
-        'description' =>  __( 'Mojolive description', 'mojolive-widget-locale' )
+        'description' =>  __( $this->WIDGET_DESCRIPTION, 'mojolive-widget-locale' )
       )
     );
 
