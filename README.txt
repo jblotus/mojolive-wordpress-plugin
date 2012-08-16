@@ -1,14 +1,14 @@
-=== mojoLive Widget ===
+=== mojoLive Profile Widget ===
 Contributors: jblotus
 Donate Link: http://www.jblotus.com
-Tags: mojolive, social networking
+Tags: mojolive, social networking, career, resume, linkedin
 Requires at least: 3.5
 Tested up to: 3.5
-Stable tag: 0.1
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This is a simple widget that displays your [mojoLive][mojoLive] profile picture and score.
+This is a simple widget that displays your mojoLive (http:://mojolive.com) profile picture and score.
 
 == Installation ==
 
@@ -33,18 +33,22 @@ Well it's pretty simple actually. Mojolive has a public API that offers access t
 Once the sidebar is rendered the first time, it is cached for about 1200 seconds or until your edit the widget settings again.
 
 == Support ==
-This plugin is developed on GitHub at [plugin github]
+This plugin is developed on GitHub at [here]( https://github.com/jblotus/mojolive-wordpress-plugin
+                                                        "mojoLive widget github page")
 If you have any issues, would like to contribute or have feature requests please do it there.
 
 == Author ==
-* Twitter via [@j_blotus][jblotus twitter]
-* My Blog - [Explosive Programming w/ j_blotus]
+* Twitter via [@j_blotus](https://twitter.com/j_blotus/, "James Fuller (@j_blotus) twitter profile")
+* My Blog - [Explosive Programming w/ j_blotus]( http://www.jblotus.com,                                    "James Fuller's Programming Blog")
 
 == Screenshots ==
 
 1. This is an example of the mojoLive profile widget on the default twentyeleven theme.
 
 == Changelog ==
+
+= 0.1.01 =
+* README.txt fixes
 
 = 0.1 =
 * Initial Release
@@ -58,18 +62,6 @@ If you have any issues, would like to contribute or have feature requests please
 
 * Tom McFarlin - [WordPress Widget Boilerplate][wordpress widget boilerplate]
 * Adam Culp (Testing Help) - [Adam's Blog][adam culp blog]
-
-[mojoLive]: http://mojolive.com
-            "Visit mojoLive"
-
-[plugin github]: https://github.com/jblotus/mojolive-wordpress-plugin
-                                                        "mojoLive widget github page"
-
-[jblotus twitter]: https://twitter.com/j_blotus/
-                   "James Fuller (@j_blotus) twitter profile"
-
-[Explosive Programming w/ j_blotus]: http://www.jblotus.com
-                                    "James Fuller's Programming Blog"
 
 [wordpress widget boilerplate]: http://tommcfarlin.com/wordpress-widget-boilerplate/
                                 "Tom created the very awesome WordPress Widget Boilerplate"
