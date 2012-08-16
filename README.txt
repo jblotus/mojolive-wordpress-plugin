@@ -47,7 +47,7 @@ If you have any issues, would like to contribute or have feature requests please
 
 == Changelog ==
 
-= 0.1.01 =
+= 0.1.1 =
 * README.txt fixes
 
 = 0.1 =
